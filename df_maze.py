@@ -3,10 +3,8 @@ from  itertools import chain
 
 class Cell:
     """A cell in the maze.
-
     A maze "Cell" is a point in the grid which may be surrounded by walls to
     the north, east, south or west.
-
     """
 
     # A wall separates a pair of cells in the N-S or W-E directions.
@@ -37,7 +35,6 @@ class Maze:
         """Initialize the maze grid.
         The maze consists of nx x ny cells and will be constructed starting
         at the cell indexed at (ix, iy).
-
         """
 
         self.nx, self.ny = nx, ny
@@ -51,17 +48,24 @@ class Maze:
 
     def __str__(self):
         """Return a (crude) string representation of the maze."""
-        start = 's'
-        end = 'e'
+        s_pos, e_pos = self.make_points()
         maze_rows = ['+' * self.nx * 2]
         for y in range(self.ny):
             maze_row = ['+']
             for x in range(self.nx):
-                if self.maze_map[x][y].walls['E']:
-                    maze_row.append(' +')
-                else:
-                    if start not in chain(*maze_rows):
+                if [x,y] == s_pos:
+                    if self.maze_map[x][y].walls['E']:
+                        maze_row.append('s+')
+                    else:
                         maze_row.append('s ')
+                elif [x,y] == e_pos:
+                    if self.maze_map[x][y].walls['E']:
+                        maze_row.append('e+')
+                    else:
+                        maze_row.append('e ')
+                else:
+                    if self.maze_map[x][y].walls['E']:
+                        maze_row.append(' +')
                     else:
                         maze_row.append('  ')
             maze_rows.append(''.join(maze_row))
@@ -70,10 +74,7 @@ class Maze:
                 if self.maze_map[x][y].walls['S']:
                     maze_row.append('++')
                 else:
-                    if end not in chain(*maze_rows) and end not in maze_row:
-                        maze_row.append('e+')
-                    else:
-                        maze_row.append(' +')
+                    maze_row.append(' +')
             maze_rows.append(''.join(maze_row))
         if len(maze_rows[0]) != len(maze_rows[-1]):
             maze_rows[0] = maze_rows[0] + '+'
@@ -211,6 +212,7 @@ class Maze:
         w_list.pop(s_wall)
         e_wall = w_list[random.randint(0, 2)]
         end = self.pick_wall(e_wall)
+        return start, end
 
         """ remove enter/exit walls to indicate start/end"""
         # self.cell_at(start[0], start[1]).walls[wall_names[s_wall]] = False
