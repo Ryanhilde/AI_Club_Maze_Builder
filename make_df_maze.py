@@ -5,7 +5,7 @@ import time
 from collections import deque
 
 # Maze dimensions (ncols, nrows)
-nx, ny = 2, 2
+nx, ny = 5, 5
 # Maze entry position
 ix, iy = 0, 0
 
@@ -15,18 +15,18 @@ maze.make_points()
 
 
 
-
+print("MAZE")
 # print(maze)
-# maze.write_svg('maze.svg')
-# maze_builder = str(maze).split(",")
-
-maze_builder = ["+++++",
+maze.write_svg('maze.svg')
+maze_builder = str(maze).split(",")
+print(maze_builder)
+maze_tester = ["+++++",
                 "+s  +",
                 "+  ++",
                 '+  e+',
                 '+++++']
-
-print(maze_builder)
+print("MAZE TESTER")
+print(maze_tester)
 
 ######################################### CODE IN PROGRESS #############################################################
 
@@ -155,7 +155,7 @@ def search(x, y):
             # blue.stamp()
             frontier.append(cell)
             visited.add((x, y - 24))
-            print(solution)
+            # print(solution)
 
         if (x + 24, y) in path and (x + 24, y) not in visited:  # check the cell on the  right
             cell = (x + 24, y)
@@ -196,4 +196,3 @@ setup_maze(maze_builder)
 search(start_x,start_y)
 backRoute(end_x, end_y)
 wn.exitonclick()
-
