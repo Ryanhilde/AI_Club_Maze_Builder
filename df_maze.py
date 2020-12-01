@@ -1,7 +1,5 @@
-
-
 import random
-
+from  itertools import chain
 
 class Cell:
     """A cell in the maze.
@@ -53,7 +51,8 @@ class Maze:
 
     def __str__(self):
         """Return a (crude) string representation of the maze."""
-
+        start = 's'
+        end = 'e'
         maze_rows = ['+' * self.nx * 2]
         for y in range(self.ny):
             maze_row = ['+']
@@ -61,31 +60,37 @@ class Maze:
                 if self.maze_map[x][y].walls['E']:
                     maze_row.append(' +')
                 else:
-                    maze_row.append('  ')
+                    if start not in chain(*maze_rows):
+                        maze_row.append('s ')
+                    else:
+                        maze_row.append('  ')
             maze_rows.append(''.join(maze_row))
             maze_row = ['+']
             for x in range(self.nx):
                 if self.maze_map[x][y].walls['S']:
                     maze_row.append('++')
                 else:
-                    maze_row.append(' +')
+                    if end not in chain(*maze_rows) and end not in maze_row:
+                        maze_row.append('e+')
+                    else:
+                        maze_row.append(' +')
             maze_rows.append(''.join(maze_row))
         if len(maze_rows[0]) != len(maze_rows[-1]):
             maze_rows[0] = maze_rows[0] + '+'
 
         start_value = random.randrange(1, len(maze_rows) - 1)
         end_value = random.randrange(1, len(maze_rows) - 1)
-        
-        
-        # TODO figure out a way here to add a s and e to the string representation 
-        create_start = maze_rows[start_value]
-        for start in range(len(create_start)):
-            if create_start[start] == ' ':
-                start_value = 's'
-                create_start[start] = start_value
-                # create_start[start] = 's'
-                break
-        print(create_start)
+
+
+        # TODO figure out a way here to add a s and e to the string representation
+        # create_start = maze_rows[start_value]
+        # for start in range(len(create_start)):
+        #     if create_start[start] == ' ':
+        #         start_value = 's'
+        #         create_start[start] = start_value
+        #         # create_start[start] = 's'
+        #         break
+        # print(create_start)
 
         return ','.join(maze_rows)
     def write_svg(self, filename):
