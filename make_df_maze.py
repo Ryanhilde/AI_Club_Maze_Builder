@@ -5,13 +5,12 @@ import time
 from collections import deque
 
 # Maze dimensions (ncols, nrows)
-nx, ny = 5, 5
+nx, ny = 10, 8
 # Maze entry position
 ix, iy = 0, 0
 
 maze = Maze(nx, ny, ix, iy)
 maze.make_maze()
-maze.make_points()
 
 
 
@@ -21,10 +20,10 @@ maze.write_svg('maze.svg')
 maze_builder = str(maze).split(",")
 print(maze_builder)
 maze_tester = ["+++++",
-                "+s  +",
-                "+  ++",
-                '+  e+',
-                '+++++']
+               "+s  +",
+               "+  ++",
+               '+  e+',
+               '+++++']
 print("MAZE TESTER")
 print(maze_tester)
 
@@ -97,6 +96,7 @@ red = Red()
 blue = Blue()
 green = Green()
 yellow = Yellow()
+done = False
 
 
 def setup_maze(maze_builder):  # define a function called setup_maze
@@ -189,10 +189,60 @@ def backRoute(x, y):
 # search(0, 0)
 # backRoute(3, 3)
 # wn.exitonclick()
+fin = False
+cor_path = []
+
+def depth_first_search(x, y, ex, ey, fin):
+    #maze.cell_at(x, y).visited = True
+    rec_fin = False
+    visited.add((x,y))
+    cor_path.append((x,y))
+    green.goto(x,y)
+    green.stamp()
+    if x == ex and y == ey:
+        """end case"""
+        fin = True
+    elif not fin:
+        """recursively checking neighboring cells"""
+        if (x - 24, y) in path and (x - 24, y) not in visited:
+                rec_fin = depth_first_search(x-24,y,ex,ey,fin)
+                if rec_fin is True:
+                    fin = rec_fin
+        if (x, y - 24) in path and (x, y - 24) not in visited:
+                rec_fin = depth_first_search(x,y-24,ex,ey,fin)
+                if rec_fin is True:
+                    fin = rec_fin
+        if (x + 24, y) in path and (x + 24, y) not in visited:
+                rec_fin = depth_first_search(x+24,y,ex,ey,fin)
+                if rec_fin is True:
+                    fin = rec_fin
+        if (x, y + 24) in path and (x, y + 24) not in visited:
+                rec_fin = depth_first_search(x,y+24,ex,ey,fin)
+                if rec_fin is True:
+                    fin = rec_fin
+
+    if not fin:
+        """recursion ends w/out exit -> dead end"""
+        cor_path.remove((x,y))
+    return fin
+            #self.cell_at(x,y).dead_end = True
+            # check 4 adjactent cells (if there isnt a wall)
+            # for each: if visited == False -> call DFS
+
+def print_path():
+    # print cells that were visited but not declared dead ends (on path)
+    for x,y in cor_path:
+                yellow.goto(x,y)
+                yellow.stamp()
+                if (x,y) == (end_x,end_y):
+                    break
 
 
 # main program starts here ####
 setup_maze(maze_builder)
 search(start_x,start_y)
 backRoute(end_x, end_y)
+
+#depth_first_search(start_x,start_y,end_x,end_y,fin)
+#print_path()
 wn.exitonclick()
