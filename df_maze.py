@@ -1,5 +1,5 @@
 import random
-from  itertools import chain
+
 
 class Cell:
     """A cell in the maze.
@@ -12,18 +12,15 @@ class Cell:
 
     def __init__(self, x, y):
         """Initialize the cell at (x,y). At first it is surrounded by walls."""
-
         self.x, self.y = x, y
         self.walls = {'N': True, 'S': True, 'E': True, 'W': True}
 
     def has_all_walls(self):
         """Does this cell still have all its walls?"""
-
         return all(self.walls.values())
 
     def knock_down_wall(self, other, wall):
         """Knock down the wall between cells self and other."""
-
         self.walls[wall] = False
         other.walls[Cell.wall_pairs[wall]] = False
 
@@ -36,14 +33,12 @@ class Maze:
         The maze consists of nx x ny cells and will be constructed starting
         at the cell indexed at (ix, iy).
         """
-
         self.nx, self.ny = nx, ny
         self.ix, self.iy = ix, iy
         self.maze_map = [[Cell(x, y) for y in range(ny)] for x in range(nx)]
 
     def cell_at(self, x, y):
         """Return the Cell object at (x,y)."""
-
         return self.maze_map[x][y]
 
     def __str__(self):
@@ -53,12 +48,12 @@ class Maze:
         for y in range(self.ny):
             maze_row = ['+']
             for x in range(self.nx):
-                if [x,y] == s_pos:
+                if [x, y] == s_pos:
                     if self.maze_map[x][y].walls['E']:
                         maze_row.append('s+')
                     else:
                         maze_row.append('s ')
-                elif [x,y] == e_pos:
+                elif [x, y] == e_pos:
                     if self.maze_map[x][y].walls['E']:
                         maze_row.append('e+')
                     else:
@@ -78,22 +73,8 @@ class Maze:
             maze_rows.append(''.join(maze_row))
         if len(maze_rows[0]) != len(maze_rows[-1]):
             maze_rows[0] = maze_rows[0] + '+'
-
-        start_value = random.randrange(1, len(maze_rows) - 1)
-        end_value = random.randrange(1, len(maze_rows) - 1)
-
-
-        # TODO figure out a way here to add a s and e to the string representation
-        # create_start = maze_rows[start_value]
-        # for start in range(len(create_start)):
-        #     if create_start[start] == ' ':
-        #         start_value = 's'
-        #         create_start[start] = start_value
-        #         # create_start[start] = 's'
-        #         break
-        # print(create_start)
-
         return ','.join(maze_rows)
+
     def write_svg(self, filename):
         """Write an SVG image of the maze to filename."""
 
@@ -149,8 +130,6 @@ class Maze:
                 if self.cell_at(0, y).walls['W']:
                     x1, y1, x2, y2 = 0 * scx, y * scy, 0 * scx, (y + 1) * scy
                     write_wall(f, x1, y1, x2, y2)
-            # print('<line x1="0" y1="0" x2="{}" y2="0"/>'.format(width), file=f)
-            # print('<line x1="0" y1="0" x2="0" y2="{}"/>'.format(height), file=f)
             print('</svg>', file=f)
 
     def find_valid_neighbours(self, cell):
@@ -213,15 +192,3 @@ class Maze:
         e_wall = w_list[random.randint(0, 2)]
         end = self.pick_wall(e_wall)
         return start, end
-
-        """ remove enter/exit walls to indicate start/end"""
-        # self.cell_at(start[0], start[1]).walls[wall_names[s_wall]] = False
-        # self.cell_at(end[0], end[1]).walls[wall_names[e_wall]] = False
-        # print(start, end)
-        # return start and end coordinates
-
-    # def depth_first_search(x, y):
-    # if self.cell_at(x, y)...
-    # raise NotImplementedError
-
-    # def solve_maze(self):
